@@ -7,8 +7,11 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { Toaster } from "sonner";
 import type { Route } from "./+types/root";
 import "./app.css";
+import { Header } from "./components/header";
+import { getUserFromSession } from "./lib/session.server";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -23,6 +26,11 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+export async function loader({ request }: Route.LoaderArgs) {
+  const user = await getUserFromSession(request);
+  return { user };
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -32,8 +40,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="antialiased">
+        <Header />
+        <div className="flex h-screen overflow-hidden border-collapse">
+          {/* <Sidebar /> */}
+          <main
+            className="
+            min-h-screen flex-1 overflow-y-auto 
+            overflow-x-hidden py-24 px-8 
+            bg-secondary/20 flex flex-col
+          "
+          >
+            {children}
+          </main>
+        </div>
+        <Toaster expand />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -41,7 +62,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+export default function App({}: Route.ComponentProps) {
   return <Outlet />;
 }
 
