@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { LucideLoaderCircle } from "lucide-react";
 import { cloneElement } from "react";
-import { useNavigation } from "react-router";
 import { Button } from "../ui/button";
 
 type SubmitButtonProps = {
@@ -15,6 +14,7 @@ type SubmitButtonProps = {
     | "ghost"
     | "link";
   size?: "default" | "sm" | "lg" | "icon";
+  pending?: boolean;
 };
 
 export function SubmitButton({
@@ -22,10 +22,8 @@ export function SubmitButton({
   icon,
   variant = "default",
   size = "default",
+  pending = false,
 }: SubmitButtonProps) {
-  const navigation = useNavigation();
-  const pending = navigation.state !== "idle";
-
   return (
     <Button
       className="cursor-pointer"

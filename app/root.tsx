@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { Header } from "./components/header";
+import { Sidebar } from "./components/sidebar/sidebar";
 import { getUserFromSession } from "./lib/session.server";
 
 export const links: Route.LinksFunction = () => [
@@ -43,7 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="antialiased">
         <Header />
         <div className="flex h-screen overflow-hidden border-collapse">
-          {/* <Sidebar /> */}
+          <Sidebar />
           <main
             className="
             min-h-screen flex-1 overflow-y-auto 

@@ -1,10 +1,12 @@
-import { Form } from "react-router";
+import { useFetcher } from "react-router";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Input } from "~/components/ui/input";
 
 export function SignUpForm() {
+  const fetcher = useFetcher();
+
   return (
-    <Form method="post" className="flex flex-col gap-y-2">
+    <fetcher.Form method="post" className="flex flex-col gap-y-2">
       <Input name="username" placeholder="Username" autoComplete="username" />
 
       <Input
@@ -28,7 +30,7 @@ export function SignUpForm() {
         autoComplete="new-password"
       />
 
-      <SubmitButton label="Sign Up" />
-    </Form>
+      <SubmitButton pending={fetcher.state !== "idle"} label="Sign Up" />
+    </fetcher.Form>
   );
 }

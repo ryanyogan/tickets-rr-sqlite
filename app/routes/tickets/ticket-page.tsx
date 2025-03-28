@@ -1,6 +1,6 @@
 import { data } from "react-router";
 import { TicketItem } from "~/features/tickets/components/ticket-item";
-import { getTicket } from "~/features/tickets/queries/get-tciet";
+import { getTicket } from "~/features/tickets/queries/get-ticket";
 import type { Route } from "./+types/ticket-page";
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -17,6 +17,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 
   return data({ ticket });
 }
+
 export default function TicketPage({ loaderData }: Route.ComponentProps) {
   const data = loaderData;
 

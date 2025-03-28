@@ -1,5 +1,5 @@
 import { LucideKanban, LucideLogOut } from "lucide-react";
-import { Link, useRouteLoaderData } from "react-router";
+import { Link, useFetcher, useRouteLoaderData } from "react-router";
 import { homePath, signInPath, signUpPath } from "~/paths";
 import { SubmitButton } from "./form/submit-button";
 import { buttonVariants } from "./ui/button";
@@ -9,11 +9,17 @@ export function Header() {
     user: { id: string; username: string } | null;
   };
 
+  const fetcher = useFetcher();
+
   const navItems = user ? (
     <>
-      <form action="/sign-out" method="post">
-        <SubmitButton label="Sign Out" icon={<LucideLogOut />} />
-      </form>
+      <fetcher.Form action="/sign-out" method="post">
+        <SubmitButton
+          pending={fetcher.state !== "idle"}
+          label="Sign Out"
+          icon={<LucideLogOut />}
+        />
+      </fetcher.Form>
     </>
   ) : (
     <>
