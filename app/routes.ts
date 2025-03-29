@@ -14,4 +14,5 @@ export default [
   route("sign-up", "routes/auth/sign-up.tsx"),
   route("sign-in", "routes/auth/sign-in.tsx"),
   route("sign-out", "routes/auth/sign-out.ts"),
+  route("tickets/:ticketId/status", "routes/tickets/ticket-status.ts"),
 ] satisfies RouteConfig;

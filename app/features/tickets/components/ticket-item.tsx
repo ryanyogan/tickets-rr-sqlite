@@ -1,6 +1,10 @@
 import clsx from "clsx";
-import { LucideArrowUpRightFromSquare, LucidePencil } from "lucide-react";
-import { Link } from "react-router";
+import {
+  LucideArrowUpRightFromSquare,
+  LucideMoreVertical,
+  LucidePencil,
+} from "lucide-react";
+import { Link, useRouteLoaderData } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -9,10 +13,12 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { isOwner } from "~/features/auth/utils/is-owner";
 import { ticketEditPath, ticketPath } from "~/paths";
 import { toCurrencyFromCent } from "~/utils/currency";
 import { TICKET_ICONS } from "../constants";
 import type { TicketWithMetadata } from "../types";
+import { TicketMoreMenu } from "./ticket-more-menu";
 
 type TicketItemProps = {
   ticket: TicketWithMetadata;
@@ -20,6 +26,9 @@ type TicketItemProps = {
 };
 
 export function TicketItem({ ticket, isDetail }: TicketItemProps) {
+  const { user } = useRouteLoaderData("root");
+  const isTicketOwner = isOwner(user, ticket);
+
   const detailButton = (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch="intent" to={ticketPath(ticket.id)}>
@@ -28,24 +37,24 @@ export function TicketItem({ ticket, isDetail }: TicketItemProps) {
     </Button>
   );
 
-  const editButton = (
+  const editButton = isTicketOwner ? (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch="intent" to={ticketEditPath(ticket.id)}>
         <LucidePencil className="size-4" />
       </Link>
     </Button>
-  );
+  ) : null;
 
-  // const moreMenu = (
-  //   <TicketMoreMenu
-  //     ticket={ticket}
-  //     trigger={
-  //       <Button variant="outline" size="icon" className="cursor-pointer">
-  //         <LucideMoreVertical className="size-4" />
-  //       </Button>
-  //     }
-  //   />
-  // );
+  const moreMenu = isTicketOwner ? (
+    <TicketMoreMenu
+      ticket={ticket}
+      trigger={
+        <Button variant="outline" size="icon" className="cursor-pointer">
+          <LucideMoreVertical className="size-4" />
+        </Button>
+      }
+    />
+  ) : null;
 
   return (
     <div
@@ -86,7 +95,7 @@ export function TicketItem({ ticket, isDetail }: TicketItemProps) {
         {isDetail ? (
           <>
             {editButton}
-            {/* {moreMenu} */}
+            {moreMenu}
           </>
         ) : (
           <>
