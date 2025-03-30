@@ -29,7 +29,7 @@ export function ToastHandler() {
           toast.warning(message, { id });
           break;
         default:
-          toast(message, { id });
+          break;
       }
     });
   }, [toasts]);

@@ -8,19 +8,17 @@ import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Ticket Bounty" },
+    { name: "description", content: "Tickets For Everyone" },
   ];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
   const ticketPromise = getTickets();
-  return { ok: true, ticketPromise };
+  return { ticketPromise };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { ticketPromise } = loaderData;
-
   return (
     <div className="flex-1 flex flex-col gap-y-8">
       <Heading
@@ -29,7 +27,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       />
 
       <Suspense fallback={<Spinner />}>
-        <Await resolve={ticketPromise}>
+        <Await resolve={loaderData.ticketPromise}>
           {(value) => <TicketList tickets={value} />}
         </Await>
       </Suspense>

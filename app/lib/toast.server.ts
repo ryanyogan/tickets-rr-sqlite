@@ -43,5 +43,5 @@ export async function getToasts(request: Request): Promise<ToastMessage[]> {
 
 // Clear toast cookie by expiring it
 export async function clearToasts(): Promise<string> {
-  return toastCookie.serialize({}, { expires: new Date(0), maxAge: 0 });
+  return toastCookie.serialize({}, { expires: new Date(0) });
 }
