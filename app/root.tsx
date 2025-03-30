@@ -1,4 +1,5 @@
 import {
+  data,
   isRouteErrorResponse,
   Links,
   Meta,
@@ -12,7 +13,9 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { Header } from "./components/header";
 import { Sidebar } from "./components/sidebar/sidebar";
+import { useTheme } from "./components/theme-script";
 import { getUserFromSession } from "./lib/session.server";
+import { parseTheme } from "./lib/theme.server";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,12 +32,15 @@ export const links: Route.LinksFunction = () => [
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUserFromSession(request);
-  return { user };
+  const theme = await parseTheme(request);
+  return data({ theme, user }, { headers: { Vary: "Cookie" } });
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const theme = useTheme() === "dark" ? "dark" : "";
+
   return (
-    <html lang="en">
+    <html lang="en" className={`${theme} antialiased`}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

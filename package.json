@@ -12,6 +12,7 @@
   "dependencies": {
     "@conform-to/react": "^1.3.0",
     "@conform-to/zod": "^1.3.0",
+    "@flydotio/litestream": "^1.0.1",
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@node-rs/argon2": "^2.0.2",
     "@prisma/client": "6.5.0",
@@ -39,7 +40,8 @@
     "sonner": "^2.0.2",
     "tailwind-merge": "^3.0.2",
     "tw-animate-css": "^1.2.4",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.7.9",
@@ -56,5 +58,8 @@
     "typescript": "^5.7.2",
     "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.4"
+  },
+  "dockerfile": {
+    "litestream": true
   }
 }
