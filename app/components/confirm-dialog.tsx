@@ -1,14 +1,16 @@
 import { cloneElement, useCallback, useEffect, useState } from "react";
 import { useFetcher, useNavigation } from "react-router";
-import { Button } from "./ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
+import { Button } from "./ui/button";
 
 interface TriggerElementProps {
   onClick?: (e: React.MouseEvent) => void;
@@ -52,32 +54,30 @@ export function ConfirmDialog({
   isPending,
 }: ConfirmDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isPending}
-          >
-            {cancelText}
-          </Button>
-          <Button
-            type="button"
-            variant={variant}
-            onClick={onConfirm}
-            disabled={isPending}
-          >
-            {isPending ? "Loading..." : confirmText}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="cursor-pointer">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction asChild>
+            <Button
+              className="cursor-pointer"
+              type="button"
+              variant={variant}
+              onClick={onConfirm}
+              disabled={isPending}
+            >
+              {isPending ? "Loading..." : confirmText}
+            </Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
@@ -140,9 +140,6 @@ export function useConfirmDialog({
 
   const triggerElement = cloneElement(trigger, {
     onClick: (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
       if (trigger.props.onClick) {
         trigger.props.onClick(e);
       }

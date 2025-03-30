@@ -34,10 +34,7 @@ export function TicketMoreMenu({ ticket, trigger }: TicketMoreMenuProps) {
       "Are you sure you want to delete this ticket? This action cannot be undone.",
     action: `/tickets/${ticket.id}/delete`,
     trigger: (
-      <DropdownMenuItem
-        className="cursor-pointer"
-        onSelect={(e) => e.preventDefault()}
-      >
+      <DropdownMenuItem className="cursor-pointer">
         <LucideTrash className="size-4" />
         <span>Delete</span>
       </DropdownMenuItem>
