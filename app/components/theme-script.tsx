@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigation, useRouteLoaderData } from "react-router";
 import type { Theme } from "~/lib/theme.server";
 
@@ -27,4 +27,31 @@ export function ThemeScript() {
     `,
     []
   );
+
+  useEffect(() => {
+    switch (theme) {
+      case "system": {
+        const syncTheme = (media: MediaQueryList | MediaQueryListEvent) => {
+          document.documentElement.classList.toggle("dark", media.matches);
+        };
+        const media = window.matchMedia("(prefers-color-scheme: dark)");
+        syncTheme(media);
+        media.addEventListener("change", syncTheme);
+        return () => media.removeEventListener("change", syncTheme);
+      }
+      case "light": {
+        document.documentElement.classList.remove("dark");
+        break;
+      }
+      case "dark": {
+        document.documentElement.classList.add("dark");
+        break;
+      }
+      default: {
+        console.error("Invalid theme:", theme);
+      }
+    }
+  }, [theme]);
+
+  return <script dangerouslySetInnerHTML={{ __html: script }} />;
 }

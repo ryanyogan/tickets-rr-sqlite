@@ -1,6 +1,7 @@
 import { data } from "react-router";
 import { prisma } from "~/lib/prisma";
 import { requireUser } from "~/lib/session.server";
+import { createToast } from "~/lib/toast.server";
 
 export async function deleteTicket(request: Request, ticketId: string) {
   const user = await requireUser(request);
@@ -24,19 +25,24 @@ export async function deleteTicket(request: Request, ticketId: string) {
       where: { id: ticketId },
     });
 
-    // const toastCookie = await createToast("Ticket deleted successfully");
+    const toastCookie = await createToast("Ticket deleted successfully");
 
     return data(
-      { success: true, message: "Ticket deleted" }
-      // { headers: { "Set-Cookie": toastCookie } }
+      { success: true, message: "Ticket deleted" },
+      { headers: { "Set-Cookie": toastCookie } }
     );
   } catch (error) {
+    const toastCookie = await createToast(
+      error instanceof Error ? error.message : "Failed to delete ticket",
+      "error"
+    );
+
     return data(
       {
         success: false,
         message: error instanceof Error ? error.message : "An error occurred",
       },
-      { status: 500 }
+      { status: 500, headers: { "Set-Cookie": toastCookie } }
     );
   }
 }

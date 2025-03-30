@@ -1,8 +1,11 @@
 import type { Ticket, TicketStatus } from "@prisma/client";
+import { LucideTrash } from "lucide-react";
 import { useFetcher } from "react-router";
+import { useConfirmDialog } from "~/components/confirm-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -25,15 +28,21 @@ export function TicketMoreMenu({ ticket, trigger }: TicketMoreMenuProps) {
     );
   }
 
-  // const [deleteButton, deleteDialog] = useConfirmDialog({
-  //   action: deleteTicket.bind(null, ticket.id),
-  //   trigger: (
-  //     <DropdownMenuItem className="cursor-pointer">
-  //       <LucideTrash className="size-4" />
-  //       <span>Delete</span>
-  //     </DropdownMenuItem>
-  //   ),
-  // });
+  const [deleteButton, deleteDialog] = useConfirmDialog({
+    title: "Delete Ticket",
+    description:
+      "Are you sure you want to delete this ticket? This action cannot be undone.",
+    action: `/tickets/${ticket.id}/delete`,
+    trigger: (
+      <DropdownMenuItem
+        className="cursor-pointer"
+        onSelect={(e) => e.preventDefault()}
+      >
+        <LucideTrash className="size-4" />
+        <span>Delete</span>
+      </DropdownMenuItem>
+    ),
+  });
 
   const ticketStatusRadioGroupItems = (
     <DropdownMenuRadioGroup
@@ -50,13 +59,13 @@ export function TicketMoreMenu({ ticket, trigger }: TicketMoreMenuProps) {
 
   return (
     <>
-      {/* {deleteDialog} */}
+      {deleteDialog}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" side="right">
           {ticketStatusRadioGroupItems}
           <DropdownMenuSeparator />
-          {/* {deleteButton} */}
+          {deleteButton}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

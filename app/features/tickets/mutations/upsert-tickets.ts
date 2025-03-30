@@ -2,6 +2,7 @@ import { data, redirect } from "react-router";
 import { z } from "zod";
 import { prisma } from "~/lib/prisma";
 import { requireUser } from "~/lib/session.server";
+import { createToast } from "~/lib/toast.server";
 import { toCent } from "~/utils/currency";
 
 // Validation schema for tickets
@@ -66,12 +67,12 @@ export async function upsertTicket(request: Request, ticketId?: string) {
   });
 
   // Set success toast message
-  // const toastCookie = await createToast(
-  //   ticketId ? "Ticket updated successfully" : "Ticket created successfully"
-  // );
+  const toastCookie = await createToast(
+    ticketId ? "Ticket updated successfully" : "Ticket created successfully"
+  );
 
   // Redirect based on operation
   return redirect(ticketId ? `/tickets/${ticket.id}` : "/tickets", {
-    // headers: { "Set-Cookie": toastCookie },
+    headers: { "Set-Cookie": toastCookie },
   });
 }

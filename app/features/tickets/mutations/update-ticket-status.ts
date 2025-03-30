@@ -2,6 +2,7 @@ import type { TicketStatus } from "@prisma/client";
 import { data } from "react-router";
 import { prisma } from "~/lib/prisma";
 import { requireUser } from "~/lib/session.server";
+import { createToast } from "~/lib/toast.server";
 
 export async function updateTicketStatus(
   request: Request,
@@ -30,19 +31,24 @@ export async function updateTicketStatus(
       data: { status },
     });
 
-    // const toastCookie = await createToast("Status updated successfully");
+    const toastCookie = await createToast("Status updated successfully");
 
     return data(
-      { success: true, message: "Status updated" }
-      // { headers: { "Set-Cookie": toastCookie } }
+      { success: true, message: "Status updated" },
+      { headers: { "Set-Cookie": toastCookie } }
     );
   } catch (error) {
+    const toastCookie = await createToast(
+      error instanceof Error ? error.message : "Failed to update ticket status",
+      "error"
+    );
+
     return data(
       {
         success: false,
         message: error instanceof Error ? error.message : "An error occurred",
       },
-      { status: 500 }
+      { status: 500, headers: { "Set-Cookie": toastCookie } }
     );
   }
 }

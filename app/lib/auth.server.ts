@@ -7,6 +7,7 @@ import {
   destroySession,
   getSession,
 } from "./session.server";
+import { createToast } from "./toast.server";
 
 // Validation schemas
 export const signInSchema = z.object({
@@ -59,19 +60,29 @@ export async function signIn(request: Request, formData: FormData) {
   });
 
   if (!user) {
+    const toastCookie = await createToast("Invalid email or password", "error");
+
     return {
       success: false,
       errors: { formErrors: ["Incorrect email or password"] },
       message: "Incorrect email or password",
+      headers: {
+        "Set-Cookie": toastCookie,
+      },
     };
   }
 
   const validPassword = await verify(user.passwordHash, password);
   if (!validPassword) {
+    const toastCookie = await createToast("Invalid email or password", "error");
+
     return {
       success: false,
       errors: { formErrors: ["Incorrect email or password"] },
       message: "Incorrect email or password",
+      headers: {
+        "Set-Cookie": toastCookie,
+      },
     };
   }
 
@@ -79,11 +90,17 @@ export async function signIn(request: Request, formData: FormData) {
   const expiresAt = new Date(Date.now() + SESSION_EXPIRY);
   const session = await createSession(user.id, expiresAt);
 
+  const toastCookie = await createToast(
+    `Welcome back, ${user.username}!`,
+    "success"
+  );
+  const cookieHeader = await commitSession(session);
+
   return {
     success: true,
     message: "Successfully signed in",
     headers: {
-      "Set-Cookie": await commitSession(session),
+      "Set-Cookie": [cookieHeader, toastCookie],
     },
   };
 }
@@ -91,10 +108,18 @@ export async function signIn(request: Request, formData: FormData) {
 export async function signUp(request: Request, formData: FormData) {
   const result = signUpSchema.safeParse(Object.fromEntries(formData));
   if (!result.success) {
+    const toastCookie = await createToast(
+      "Please check your registration details",
+      "error"
+    );
+
     return {
       success: false,
       errors: result.error.flatten(),
       message: "Invalid form data",
+      headers: {
+        "Set-Cookie": toastCookie,
+      },
     };
   }
 
@@ -108,10 +133,18 @@ export async function signUp(request: Request, formData: FormData) {
   });
 
   if (existingUser) {
+    const toastCookie = await createToast(
+      "Username or email already in use",
+      "error"
+    );
+
     return {
       success: false,
       errors: { formErrors: ["Either email or username is already in use"] },
       message: "Either email or username is already in use",
+      headers: {
+        "Set-Cookie": toastCookie,
+      },
     };
   }
 
@@ -129,20 +162,28 @@ export async function signUp(request: Request, formData: FormData) {
   const expiresAt = new Date(Date.now() + SESSION_EXPIRY);
   const session = await createSession(user.id, expiresAt);
 
+  const toastCookie = await createToast(
+    `Welcome, ${username}! Your account has been created.`,
+    "success"
+  );
+  const cookieHeader = await commitSession(session);
+
   return {
     success: true,
     message: "Account created successfully",
     headers: {
-      "Set-Cookie": await commitSession(session),
+      "Set-Cookie": [cookieHeader, toastCookie],
     },
   };
 }
 
 export async function signOut(request: Request) {
   const session = await getSession(request);
+  const toastCookie = await createToast("You have been signed out", "info");
+
   return {
     headers: {
-      "Set-Cookie": await destroySession(session),
+      "Set-Cookie": [await destroySession(session), toastCookie],
     },
   };
 }

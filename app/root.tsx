@@ -14,8 +14,10 @@ import "./app.css";
 import { Header } from "./components/header";
 import { Sidebar } from "./components/sidebar/sidebar";
 import { useTheme } from "./components/theme-script";
+import { ToastHandler } from "./components/toast-handler";
 import { getUserFromSession } from "./lib/session.server";
 import { parseTheme } from "./lib/theme.server";
+import { clearToasts, getToasts } from "./lib/toast.server";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -33,7 +35,16 @@ export const links: Route.LinksFunction = () => [
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUserFromSession(request);
   const theme = await parseTheme(request);
-  return data({ theme, user }, { headers: { Vary: "Cookie" } });
+  const toasts = await getToasts(request);
+  const headers = new Headers();
+
+  if (toasts.length > 0) {
+    headers.append("Set-Cookie", await clearToasts());
+  }
+
+  headers.append("Vary", "Cookie");
+
+  return data({ theme, user, toasts }, { headers });
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -62,6 +73,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </main>
         </div>
         <Toaster expand />
+        <ToastHandler />
         <ScrollRestoration />
         <Scripts />
       </body>
