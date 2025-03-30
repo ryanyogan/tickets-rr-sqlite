@@ -21,7 +21,6 @@ export function TicketUpsertForm({
   actionData,
 }: TicketUpsertFormProps) {
   const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
 
   const [values, setValues] = useState({
     title: ticket?.title || "",
@@ -57,22 +56,12 @@ export function TicketUpsertForm({
         <div className="text-red-500 text-sm">{errors.fieldErrors.title}</div>
       )}
 
-      {/* <FieldError actionState={actionState} name="title" /> */}
-
       <Label htmlFor="content">Content</Label>
-      <Textarea
-        id="content"
-        name="content"
-        // defaultValue={
-        //   (actionState.payload?.get("content") as string) ?? ticket?.content
-        // }
-      />
+      <Textarea id="content" name="content" defaultValue={values.content} />
 
       {errors.fieldErrors.content && (
         <div className="text-red-500 text-sm">{errors.fieldErrors.content}</div>
       )}
-
-      {/* <FieldError actionState={actionState} name="content" /> */}
 
       <div className="flex gap-x-2 mb-1">
         <div className="w-1/2 flex flex-col gap-y-2">
@@ -81,18 +70,16 @@ export function TicketUpsertForm({
             imperativeHandleRef={datePickerImperativeHandleRef}
             id="deadline"
             name="deadline"
-            // defaultValue={
-            //   (actionState.payload?.get("deadline") as string) ??
-            //   ticket?.deadline
-            // }
+            defaultValue={values.deadline}
           />
+
           {errors.fieldErrors.deadline && (
             <div className="text-red-500 text-sm">
               {errors.fieldErrors.deadline}
             </div>
           )}
-          {/* <FieldError actionState={actionState} name="deadline" /> */}
         </div>
+
         <div className="w-1/2 flex flex-col gap-y-2">
           <Label htmlFor="bounty">Bounty ($)</Label>
           <Input
@@ -100,17 +87,14 @@ export function TicketUpsertForm({
             name="bounty"
             type="number"
             step=".01"
-            // defaultValue={
-            //   (actionState.payload?.get("bounty") as string) ??
-            //   (ticket?.bounty ? fromCent(ticket.bounty) : "")
-            // }
+            defaultValue={values.bounty}
           />
+
           {errors.fieldErrors.bounty && (
             <div className="text-red-500 text-sm">
               {errors.fieldErrors.bounty}
             </div>
           )}
-          {/* <FieldError actionState={actionState} name="bounty" /> */}
         </div>
       </div>
 

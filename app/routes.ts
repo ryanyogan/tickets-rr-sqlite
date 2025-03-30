@@ -10,6 +10,7 @@ export default [
   index("routes/home.tsx"),
   layout("routes/tickets/tickets-layout.tsx", [
     route("tickets/:ticketId", "routes/tickets/ticket-page.tsx"),
+    route("tickets/:ticketId/edit", "routes/tickets/ticket-edit.tsx"),
     route("tickets", "routes/tickets/tickets.tsx"),
   ]),
   route("sign-up", "routes/auth/sign-up.tsx"),
