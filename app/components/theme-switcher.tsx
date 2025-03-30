@@ -36,7 +36,7 @@ export function ThemeSwitcher() {
           value={
             theme === "light" ? "dark" : theme === "dark" ? "system" : "light"
           }
-          className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+          className="cursor-pointer"
         >
           {theme === "light" ? (
             <Moon className="w-5 h-5" />
