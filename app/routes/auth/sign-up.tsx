@@ -33,6 +33,7 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   return redirect("/tickets", {
+    // @ts-ignore
     headers: result.headers,
   });
 }

@@ -34,6 +34,7 @@ export async function action({ request }: Route.ActionArgs) {
   const redirectTo = url.searchParams.get("redirectTo") || "/tickets";
 
   return redirect(redirectTo, {
+    // @ts-ignore
     headers: result.headers,
   });
 }

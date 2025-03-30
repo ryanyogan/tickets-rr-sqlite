@@ -10,6 +10,7 @@ export async function action({ request }: Route.ActionArgs) {
   const result = await signOut(request);
 
   return redirect("/sign-in", {
+    // @ts-ignore
     headers: result.headers,
   });
 }
