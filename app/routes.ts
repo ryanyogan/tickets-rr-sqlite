@@ -2,6 +2,7 @@ import {
   type RouteConfig,
   index,
   layout,
+  prefix,
   route,
 } from "@react-router/dev/routes";
 
@@ -15,4 +16,5 @@ export default [
   route("sign-in", "routes/auth/sign-in.tsx"),
   route("sign-out", "routes/auth/sign-out.ts"),
   route("tickets/:ticketId/status", "routes/tickets/ticket-status.ts"),
+  ...prefix("actions", [route("theme", "routes/actions/theme.ts")]),
 ] satisfies RouteConfig;

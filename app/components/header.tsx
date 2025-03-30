@@ -2,6 +2,7 @@ import { LucideKanban, LucideLogOut } from "lucide-react";
 import { Link, useFetcher, useRouteLoaderData } from "react-router";
 import { homePath, signInPath, signUpPath } from "~/paths";
 import { SubmitButton } from "./form/submit-button";
+import { ThemeSwitcher } from "./theme-switcher";
 import { buttonVariants } from "./ui/button";
 
 export function Header() {
@@ -53,7 +54,7 @@ export function Header() {
         </Link>
       </div>
       <div className="flex items-center gap-x-2">
-        {/* <ThemeSwitcher /> */}
+        <ThemeSwitcher />
         {navItems}
       </div>
     </nav>
