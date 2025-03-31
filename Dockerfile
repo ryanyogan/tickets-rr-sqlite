@@ -1,5 +1,4 @@
 # syntax = docker/dockerfile:1
-
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=22.12.0
 FROM node:${NODE_VERSION}-slim AS base
@@ -11,57 +10,61 @@ WORKDIR /app
 
 # Set production environment
 ENV NODE_ENV="production"
+ENV DATABASE_URL="file:///data/sqlite.db"
 
-
-# Throw-away build stage to reduce size of final image
-FROM base AS build
-
+# Build stage to reduce size of final image
+FROM base AS deps
+# Only copy package files for better layer caching
+COPY package*.json ./
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp openssl pkg-config python-is-python3
+    apt-get install --no-install-recommends -y build-essential node-gyp openssl pkg-config python-is-python3 && \
+    npm ci --legacy-peer-deps --include=dev && \
+    apt-get purge -y --auto-remove build-essential python-is-python3 && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install node modules
-COPY package-lock.json package.json ./
-RUN npm ci --legacy-peer-deps --include=dev
-
-# Generate Prisma Client
-COPY prisma .
+# Prisma generation stage
+FROM deps AS prisma
+COPY prisma ./prisma
 RUN npx prisma generate
 
-# Copy application code
+# Build stage for application
+FROM prisma AS builder
+# Copy source code
 COPY . .
-
 # Build application
 RUN npm run build
 
-# Remove development dependencies
+# Production dependencies only
+FROM deps AS production-deps
 RUN npm prune --legacy-peer-deps --omit=dev
 
-
 # Final stage for app image
-FROM base
+FROM base AS runner
 
-# Install packages needed for deployment
+# Install only essential packages needed for runtime
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y ca-certificates openssl wget && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
-# Install litestream
-# RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.deb && \
-#     dpkg -i litestream-v0.3.13-linux-amd64.deb && \
-#     rm litestream-v0.3.13-linux-amd64.deb
-
-# Copy built application
-COPY --from=build /app /app
+    apt-get install --no-install-recommends -y ca-certificates openssl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Setup sqlite3 on a separate volume
 RUN mkdir -p /data
 VOLUME /data
 
-# Entrypoint prepares the database.
-ENTRYPOINT [ "/app/docker-entrypoint.js" ]
+# Copy production dependencies
+COPY --from=production-deps /app/node_modules ./node_modules
+# Copy Prisma generated client
+COPY --from=prisma /app/node_modules/.prisma ./node_modules/.prisma
+# Copy built application
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/public ./public
+# Copy essential runtime files
+COPY docker-entrypoint.js ./
+COPY prisma ./prisma
 
-# Start the server by default, this can be overwritten at runtime
+# Entrypoint prepares the database
+ENTRYPOINT ["/app/docker-entrypoint.js"]
+
+# Start the server
 EXPOSE 3000
-ENV DATABASE_URL="file:///data/sqlite.db"
-CMD [ "npm", "run", "start" ]
+CMD ["npm", "run", "start"]
