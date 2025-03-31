@@ -3,6 +3,8 @@ import { Breadcrumbs } from "~/components/breadcrumbs";
 import { Separator } from "~/components/ui/separator";
 import { TicketItem } from "~/features/tickets/components/ticket-item";
 import { getTicket } from "~/features/tickets/queries/get-ticket";
+import { prisma } from "~/lib/prisma";
+import { requireUser } from "~/lib/session.server";
 import { homePath } from "~/paths";
 import type { Route } from "./+types/ticket-page";
 
@@ -19,6 +21,48 @@ export async function loader({ params }: Route.LoaderArgs) {
   }
 
   return data({ ticket });
+}
+
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const content = formData.get("content") as string;
+  const ticketId = formData.get("ticketId") as string;
+
+  if (!content || !ticketId) {
+    return new Response("Invalid data", {
+      status: 400,
+      statusText: "Bad Request",
+    });
+  }
+
+  try {
+    const user = await requireUser(request);
+    if (!user) {
+      return new Response("Unauthorized", {
+        status: 401,
+        statusText: "Unauthorized",
+      });
+    }
+
+    await prisma.comment.create({
+      data: {
+        userId: user.id,
+        ticketId: ticketId as string,
+        content,
+      },
+    });
+
+    return new Response("Comment created", {
+      status: 201,
+      statusText: "Created",
+    });
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    return new Response("Internal Server Error", {
+      status: 500,
+      statusText: "Internal Server Error",
+    });
+  }
 }
 
 export default function TicketPage({ loaderData }: Route.ComponentProps) {
