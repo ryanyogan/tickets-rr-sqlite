@@ -16,10 +16,12 @@ export function SearchInput({ placeholder }: SearchInputProps) {
       const params = new URLSearchParams(searchParams);
 
       if (value) {
-        setSearchParams({ search: value });
+        params.append("search", value);
       } else {
-        setSearchParams({});
+        params.delete("search");
       }
+
+      setSearchParams(params);
 
       replace(`${pathname}?${params.toString()}}`);
     },

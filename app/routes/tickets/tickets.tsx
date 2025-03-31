@@ -15,8 +15,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   const search = searchParams.get("search") as string;
+  const sort = searchParams.get("sort") as string;
 
-  const ticketPromise = getTickets(user?.id, { search });
+  const ticketPromise = getTickets(user?.id, { search, sort });
 
   return { ticketPromise };
 }
