@@ -14,7 +14,7 @@ export function ThemeSwitcher() {
     <span ref={detailsRef} className="group relative cursor-pointer">
       <Form
         role="listbox"
-        aria-roledescription="Theme switcher"
+        aria-label="Theme switcher"
         preventScrollReset
         replace
         action="/actions/theme"
@@ -29,6 +29,7 @@ export function ThemeSwitcher() {
           value={location.pathname + location.search + location.hash}
         />
         <Button
+          aria-label="Theme switcher"
           variant="outline"
           size="icon"
           role="option"

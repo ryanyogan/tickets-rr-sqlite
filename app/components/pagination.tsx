@@ -71,8 +71,8 @@ export function Pagination({
       defaultValue={pagination.size.toString()}
       onValueChange={handleChangeSize}
     >
-      <SelectTrigger className="h-[36px]">
-        <SelectValue />
+      <SelectTrigger className="h-[36px]" aria-label="Page Size">
+        <SelectValue aria-label="Select Page Size" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="5">5</SelectItem>

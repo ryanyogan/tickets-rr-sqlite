@@ -44,8 +44,8 @@ export function SortSelect({ options, onChange, value }: SortSelectProps) {
       onValueChange={handleSort}
       defaultValue={value.sortKey + "_" + value.sortValue}
     >
-      <SelectTrigger>
-        <SelectValue />
+      <SelectTrigger aria-label="Sort">
+        <SelectValue aria-label="Sort By" />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (

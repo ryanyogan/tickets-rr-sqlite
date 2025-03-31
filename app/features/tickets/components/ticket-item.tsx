@@ -32,7 +32,11 @@ export function TicketItem({ ticket, isDetail }: TicketItemProps) {
 
   const detailButton = (
     <Button variant="outline" size="icon" asChild>
-      <Link prefetch="intent" to={ticketPath(ticket.id)}>
+      <Link
+        aria-label="Show Ticket"
+        prefetch="intent"
+        to={ticketPath(ticket.id)}
+      >
         <LucideArrowUpRightFromSquare className="size-4" />
       </Link>
     </Button>
@@ -40,7 +44,11 @@ export function TicketItem({ ticket, isDetail }: TicketItemProps) {
 
   const editButton = isTicketOwner ? (
     <Button variant="outline" size="icon" asChild>
-      <Link prefetch="intent" to={ticketEditPath(ticket.id)}>
+      <Link
+        aria-label="Edit Ticket"
+        prefetch="intent"
+        to={ticketEditPath(ticket.id)}
+      >
         <LucidePencil className="size-4" />
       </Link>
     </Button>
@@ -50,7 +58,12 @@ export function TicketItem({ ticket, isDetail }: TicketItemProps) {
     <TicketMoreMenu
       ticket={ticket}
       trigger={
-        <Button variant="outline" size="icon" className="cursor-pointer">
+        <Button
+          aria-label="Show More"
+          variant="outline"
+          size="icon"
+          className="cursor-pointer"
+        >
           <LucideMoreVertical className="size-4" />
         </Button>
       }
