@@ -1,11 +1,16 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: Geist;
+  src: url("../app/assets/fonts/Geist-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-geist: "Geist", sans-serif;
 
   --animate-fade-from-top: fade-from-top 0.5s ease-out;
   --animate-sidebar-from-left: sidebar-from-left 0.5s ease-out;
