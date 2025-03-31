@@ -52,9 +52,8 @@ export async function action({ request }: Route.ActionArgs) {
       },
     });
 
-    return new Response("Comment created", {
-      status: 201,
-      statusText: "Created",
+    return data({
+      success: true,
     });
   } catch (error) {
     console.error("Error creating comment:", error);

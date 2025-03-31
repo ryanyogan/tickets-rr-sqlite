@@ -1,6 +1,6 @@
 import type { Ticket } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
-import { Form, useNavigation } from "react-router";
+import { Form } from "react-router";
 import {
   DatePicker,
   type ImperativeHandleFromDatePicker,
@@ -20,8 +20,7 @@ export function TicketUpsertForm({
   ticket,
   actionData,
 }: TicketUpsertFormProps) {
-  const navigation = useNavigation();
-
+  console.log(actionData);
   const [values, setValues] = useState({
     title: ticket?.title || "",
     content: ticket?.content || "",

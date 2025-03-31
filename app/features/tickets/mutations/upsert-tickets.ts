@@ -72,7 +72,7 @@ export async function upsertTicket(request: Request, ticketId?: string) {
   );
 
   // Redirect based on operation
-  return redirect(ticketId ? `/tickets/${ticket.id}` : "/tickets", {
+  return redirect(`/tickets/${ticket.id}`, {
     headers: { "Set-Cookie": toastCookie },
   });
 }
