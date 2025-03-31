@@ -33,7 +33,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
       <Suspense fallback={<Spinner />}>
         <Await resolve={loaderData.ticketPromise}>
-          {(value) => <TicketList tickets={value} />}
+          {(value) => (
+            <TicketList list={value.list} metadata={value.metadata} />
+          )}
         </Await>
       </Suspense>
     </div>

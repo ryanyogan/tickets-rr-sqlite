@@ -1,27 +1,46 @@
 import { prisma } from "~/lib/prisma";
 import type { ParsedSearchParams } from "../search-params";
-import type { TicketWithMetadata } from "../types";
 
 export async function getTickets(
   userId: string | undefined,
   searchParams: ParsedSearchParams
-): Promise<TicketWithMetadata[]> {
-  return prisma.ticket.findMany({
-    where: {
-      userId,
-      title: {
-        contains: searchParams.search ?? "",
+) {
+  const where = {
+    userId,
+    title: {
+      contains: searchParams.search ?? "",
+    },
+  };
+  const skip = searchParams.size * searchParams.page;
+  const take = searchParams.size;
+
+  const [tickets, count] = await prisma.$transaction([
+    prisma.ticket.findMany({
+      where,
+      skip,
+      take,
+      orderBy: {
+        [searchParams.sortKey]: searchParams.sortValue,
       },
-    },
-    orderBy: {
-      [searchParams.sortKey]: searchParams.sortValue,
-    },
-    include: {
-      user: {
-        select: {
-          username: true,
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
         },
       },
+    }),
+
+    prisma.ticket.count({
+      where,
+    }),
+  ]);
+
+  return {
+    list: tickets,
+    metadata: {
+      count,
+      hasNextPage: count > skip + take,
     },
-  });
+  };
 }
