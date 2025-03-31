@@ -20,7 +20,6 @@ export function TicketUpsertForm({
   ticket,
   actionData,
 }: TicketUpsertFormProps) {
-  console.log(actionData);
   const [values, setValues] = useState({
     title: ticket?.title || "",
     content: ticket?.content || "",
