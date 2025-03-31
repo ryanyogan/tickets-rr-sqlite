@@ -47,9 +47,9 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install litestream
-RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.deb && \
-    dpkg -i litestream-v0.3.13-linux-amd64.deb && \
-    rm litestream-v0.3.13-linux-amd64.deb
+# RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.deb && \
+#     dpkg -i litestream-v0.3.13-linux-amd64.deb && \
+#     rm litestream-v0.3.13-linux-amd64.deb
 
 # Copy built application
 COPY --from=build /app /app
