@@ -12,7 +12,7 @@ import type { Route } from "./+types/tickets";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUserFromSession(request);
-  const ticketPromise = getTickets(user?.id);
+  const ticketPromise = getTickets(user?.id, { search: "" });
 
   return { ticketPromise };
 }

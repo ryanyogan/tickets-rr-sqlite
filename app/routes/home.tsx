@@ -14,7 +14,11 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const ticketPromise = getTickets();
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  const search = searchParams.get("search") as string;
+
+  const ticketPromise = getTickets(undefined, { search });
   return { ticketPromise };
 }
 

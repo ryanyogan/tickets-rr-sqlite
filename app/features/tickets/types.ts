@@ -7,6 +7,5 @@ export type TicketWithMetadata = Prisma.TicketGetPayload<{
         username: true;
       };
     };
-    comments: true;
   };
 }>;
