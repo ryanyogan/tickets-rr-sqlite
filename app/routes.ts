@@ -26,4 +26,5 @@ export default [
   route("tickets/:ticketId/delete", "routes/tickets/ticket-delete.ts"),
   ...prefix("actions", [route("theme", "routes/actions/theme.ts")]),
   route("robots.txt", "routes/robots.txt.ts"),
+  route("sitemap.xml", "routes/sitemap.xml.ts"),
 ] satisfies RouteConfig;
