@@ -8,6 +8,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 import { Toaster } from "sonner";
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -59,24 +60,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="antialiased">
-        <Header />
-        <div className="flex h-screen overflow-hidden border-collapse">
-          <Sidebar />
-          <main
-            className="
+        <NuqsAdapter>
+          <Header />
+          <div className="flex h-screen overflow-hidden border-collapse">
+            <Sidebar />
+            <main
+              className="
             min-h-screen flex-1 overflow-y-auto 
             overflow-x-hidden py-24 px-8 
             bg-secondary/20 flex flex-col
           "
-          >
-            {children}
-          </main>
-        </div>
-        <Toaster expand />
-        <ToastHandler />
-        <ThemeScript />
-        <ScrollRestoration />
-        <Scripts />
+            >
+              {children}
+            </main>
+          </div>
+          <Toaster expand />
+          <ToastHandler />
+          <ThemeScript />
+          <ScrollRestoration />
+          <Scripts />
+        </NuqsAdapter>
       </body>
     </html>
   );

@@ -14,7 +14,6 @@ export function TicketList({ tickets }: TicketListProps) {
       <div className="w-full max-w-[420px] flex gap-x-2">
         <SearchInput placeholder="Search tickets..." />
         <SortSelect
-          defaultValue="newest"
           options={[
             { value: "newest", label: "Newest" },
             { value: "bounty", label: "Bounty" },

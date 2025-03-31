@@ -107,8 +107,12 @@ export function TicketItem({ ticket, isDetail }: TicketItemProps) {
           )}
         </div>
       </div>
+
       {isDetail ? (
-        <Comments ticketId={ticket.id} comments={ticket.comments} />
+        <Comments
+          ticketId={ticket.id}
+          comments={(ticket as any).comments ?? []}
+        />
       ) : null}
     </div>
   );
