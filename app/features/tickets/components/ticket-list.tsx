@@ -15,8 +15,9 @@ export function TicketList({ tickets }: TicketListProps) {
         <SearchInput placeholder="Search tickets..." />
         <SortSelect
           options={[
-            { value: "newest", label: "Newest" },
-            { value: "bounty", label: "Bounty" },
+            { sortKey: "createdAt", sortValue: "desc", label: "Newest" },
+            { sortKey: "createdAt", sortValue: "asc", label: "Oldest" },
+            { sortKey: "bounty", sortValue: "desc", label: "Bounty" },
           ]}
         />
       </div>

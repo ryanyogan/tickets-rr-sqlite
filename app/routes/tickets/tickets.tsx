@@ -6,18 +6,17 @@ import { Spinner } from "~/components/spinner";
 import { TicketList } from "~/features/tickets/components/ticket-list";
 import { upsertTicket } from "~/features/tickets/mutations/upsert-tickets";
 import { getTickets } from "~/features/tickets/queries/get-tickets";
+import { searchParamsCache } from "~/features/tickets/search-params";
 import { getUserFromSession } from "~/lib/session.server";
 import { TicketUpsertForm } from "../../features/tickets/components/ticket-upsert-form";
 import type { Route } from "./+types/tickets";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUserFromSession(request);
-  const url = new URL(request.url);
-  const searchParams = url.searchParams;
-  const search = searchParams.get("search") as string;
-  const sort = searchParams.get("sort") as string;
+  const searchParams = Object.fromEntries(new URL(request.url).searchParams);
+  const parsedSearchParams = searchParamsCache.parse(searchParams);
 
-  const ticketPromise = getTickets(user?.id, { search, sort });
+  const ticketPromise = getTickets(user?.id, parsedSearchParams);
 
   return { ticketPromise };
 }

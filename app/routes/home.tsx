@@ -4,6 +4,7 @@ import { Heading } from "~/components/heading";
 import { Spinner } from "~/components/spinner";
 import { TicketList } from "~/features/tickets/components/ticket-list";
 import { getTickets } from "~/features/tickets/queries/get-tickets";
+import { searchParamsCache } from "~/features/tickets/search-params";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -14,12 +15,11 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const url = new URL(request.url);
-  const searchParams = url.searchParams;
-  const search = searchParams.get("search") as string;
-  const sort = searchParams.get("sort") as string;
+  const searchParams = Object.fromEntries(new URL(request.url).searchParams);
+  const parsedSearchParams = searchParamsCache.parse(searchParams);
 
-  const ticketPromise = getTickets(undefined, { search, sort });
+  const ticketPromise = getTickets(undefined, parsedSearchParams);
+
   return { ticketPromise };
 }
 
