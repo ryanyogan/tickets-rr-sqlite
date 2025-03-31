@@ -13,6 +13,12 @@ export default [
     route("tickets/:ticketId/edit", "routes/tickets/ticket-edit.tsx"),
     route("tickets", "routes/tickets/tickets.tsx"),
   ]),
+  layout("routes/account/account-layout.tsx", [
+    ...prefix("account", [
+      route("profile", "routes/account/profile.tsx"),
+      route("password", "routes/account/password.tsx"),
+    ]),
+  ]),
   route("sign-up", "routes/auth/sign-up.tsx"),
   route("sign-in", "routes/auth/sign-in.tsx"),
   route("sign-out", "routes/auth/sign-out.ts"),
