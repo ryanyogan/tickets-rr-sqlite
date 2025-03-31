@@ -18,9 +18,26 @@ model Ticket {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  comments  Comment[]
+
+  @@index([userId])
+}
+
+model Comment {
+  id      String @id @default(cuid())
+  content String
+
+  ticketId String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
 
+  @@index([ticketId])
   @@index([userId])
 }
 
@@ -37,6 +54,7 @@ model User {
   passwordHash String
   session      Session[]
   tickets      Ticket[]
+  comments     Comment[]
 }
 
 model Session {

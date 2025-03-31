@@ -12,6 +12,15 @@ export const getTicket = cache(async (id: string) => {
           username: true,
         },
       },
+      comments: {
+        include: {
+          user: {
+            select: {
+              username: true,
+            },
+          },
+        },
+      },
     },
   });
 });
