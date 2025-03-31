@@ -94,14 +94,17 @@ export async function signIn(request: Request, formData: FormData) {
     `Welcome back, ${user.username}!`,
     "success"
   );
+
   const cookieHeader = await commitSession(session);
+
+  const headers = new Headers();
+  headers.append("Set-Cookie", cookieHeader);
+  headers.append("Set-Cookie", toastCookie);
 
   return {
     success: true,
     message: "Successfully signed in",
-    headers: {
-      "Set-Cookie": [cookieHeader, toastCookie],
-    },
+    headers,
   };
 }
 
@@ -166,14 +169,16 @@ export async function signUp(request: Request, formData: FormData) {
     `Welcome, ${username}! Your account has been created.`,
     "success"
   );
+
   const cookieHeader = await commitSession(session);
+  const headers = new Headers();
+  headers.append("Set-Cookie", cookieHeader);
+  headers.append("Set-Cookie", toastCookie);
 
   return {
     success: true,
     message: "Account created successfully",
-    headers: {
-      "Set-Cookie": [cookieHeader, toastCookie],
-    },
+    headers,
   };
 }
 
@@ -181,9 +186,11 @@ export async function signOut(request: Request) {
   const session = await getSession(request);
   const toastCookie = await createToast("You have been signed out", "info");
 
+  const headers = new Headers();
+  headers.append("Set-Cookie", await destroySession(session));
+  headers.append("Set-Cookie", toastCookie);
+
   return {
-    headers: {
-      "Set-Cookie": [await destroySession(session), toastCookie],
-    },
+    headers,
   };
 }
