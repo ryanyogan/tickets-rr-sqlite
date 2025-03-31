@@ -47,7 +47,9 @@ export default function Tickets({
 
       <Suspense fallback={<Spinner />}>
         <Await resolve={ticketPromise}>
-          {(value) => <TicketList tickets={value} />}
+          {(value) => (
+            <TicketList list={value.list} metadata={value.metadata} />
+          )}
         </Await>
       </Suspense>
     </div>
