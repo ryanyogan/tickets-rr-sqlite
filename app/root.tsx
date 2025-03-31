@@ -13,7 +13,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { Header } from "./components/header";
 import { Sidebar } from "./components/sidebar/sidebar";
-import { useTheme } from "./components/theme-script";
+import { ThemeScript, useTheme } from "./components/theme-script";
 import { ToastHandler } from "./components/toast-handler";
 import { getUserFromSession } from "./lib/session.server";
 import { parseTheme } from "./lib/theme.server";
@@ -74,6 +74,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
         <Toaster expand />
         <ToastHandler />
+        <ThemeScript />
         <ScrollRestoration />
         <Scripts />
       </body>
