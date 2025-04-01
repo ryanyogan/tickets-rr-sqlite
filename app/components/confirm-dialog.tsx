@@ -28,6 +28,8 @@ type UseConfirmDialogProps = {
   method?: "post" | "delete";
   onSuccess?: () => void;
   formData?: Record<string, string>;
+  intent?: string;
+  entityId?: string;
 };
 
 type ConfirmDialogProps = {
@@ -92,6 +94,8 @@ export function useConfirmDialog({
   method = "post",
   onSuccess,
   formData = {},
+  intent,
+  entityId,
 }: UseConfirmDialogProps) {
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher();
@@ -108,6 +112,14 @@ export function useConfirmDialog({
     Object.entries(formData).forEach(([key, value]) => {
       formDataObj.append(key, value);
     });
+
+    if (intent) {
+      formDataObj.append("intent", intent);
+    }
+
+    if (entityId) {
+      formDataObj.append("entityId", entityId);
+    }
 
     fetcher.submit(formDataObj, {
       method,

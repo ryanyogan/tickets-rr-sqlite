@@ -40,6 +40,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
       "You don't have permission to edit this ticket",
       "error"
     );
+
     return redirect(`/tickets/${ticketId}`, {
       headers: { "Set-Cookie": toastCookie },
     });
